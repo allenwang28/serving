@@ -69,7 +69,7 @@ RUN pip3 --no-cache-dir install \
     keras_applications>=1.0.8 \
     keras_preprocessing>=1.1.0 \
     mock \
-    numpy<1.19.0 \
+    'numpy<1.19.0' \
     portpicker \
     requests \
     --ignore-installed setuptools \
@@ -109,27 +109,28 @@ RUN bazel build --color=yes --curses=yes \
     cp bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server \
     /usr/local/bin/
 
-COPY tf_nightly-2.5.0-cp36-cp36m-linux_x86_64.whl tf_nightly-2.5.0-cp36-cp36m-linux_x86_64.whl
-RUN pip3 install --upgrade tf_nightly-2.5.0-cp36-cp36m-linux_x86_64.whl
+COPY tf_nightly-2.5.0-cp36-cp36m-linux_x86_64.whl /tmp/pip/tf_nightly-2.5.0-cp36-cp36m-linux_x86_64.whl
+RUN pip3 install --upgrade /tmp/pip/tf_nightly-2.5.0-cp36-cp36m-linux_x86_64.whl
 
 # Build and install TensorFlow Serving API
-RUN bazel build --color=yes --curses=yes \
-    ${TF_SERVING_BAZEL_OPTIONS} \
-    --verbose_failures \
-    --output_filter=DONT_MATCH_ANYTHING \
-    ${TF_SERVING_BUILD_OPTIONS} \
-    tensorflow_serving/tools/pip_package:build_pip_package && \
-    bazel-bin/tensorflow_serving/tools/pip_package/build_pip_package \
-    /tmp/pip && \
-    pip --no-cache-dir install --upgrade \
-    /tmp/pip/tensorflow_serving_api-*.whl && \
-    rm -rf /tmp/pip
+# RUN bazel build --color=yes --curses=yes \
+#     ${TF_SERVING_BAZEL_OPTIONS} \
+#     --verbose_failures \
+#     --output_filter=DONT_MATCH_ANYTHING \
+#     ${TF_SERVING_BUILD_OPTIONS} \
+#     tensorflow_serving/tools/pip_package:build_pip_package && \
+#     bazel-bin/tensorflow_serving/tools/pip_package/build_pip_package \
+#     /tmp/pip && \
+#     pip --no-cache-dir install --upgrade \
+#     /tmp/pip/tensorflow_serving_api-*.whl && \
+#     rm -rf /tmp/pip
+RUN pip3 install tensorflow-serving-api
 
 COPY libtpu.so /lib/libtpu.so
 COPY simple_example.py /tensorflow-serving/simple_example.py
 
 FROM binary_build as clean_build
 # Clean up Bazel cache when done.
-RUN bazel clean --expunge --color=yes && \
-    rm -rf /root/.cache
+#RUN bazel clean --expunge --color=yes && \
+#    rm -rf /root/.cache
 CMD ["/bin/bash"]
