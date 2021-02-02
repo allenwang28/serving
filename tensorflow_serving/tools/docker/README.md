@@ -11,7 +11,6 @@ export CONTAINER_NAME=tf_serve
 export IMAGE_NAME=$USER/tensorflow-serving-tpu
 export MODEL_PATH=/path/to/my/model
 
-# Build the Dockerfile with /bin/bash entrypoint
 docker build --pull -t $IMAGE_NAME -f Dockerfile.tpu .
 
 docker run -it -p 8501:8501 --name $CONTAINER_NAME --privileged  -v "/lib/:/lib/" -v "$MODEL_PATH/:/models/model" $IMAGE_NAME &
