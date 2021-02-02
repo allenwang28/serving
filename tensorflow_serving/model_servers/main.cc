@@ -58,11 +58,11 @@ limitations under the License.
 
 
 void InitializeTPU() {
-  void* library dlopen("libtpu.so", RTLD_NOW);
+  void* library = dlopen("libtpu.so", RTLD_NOW);
   if (library) {
     tensorflow::tpu::InitializeTpuLibrary(library);
   }
-  tensorflow::tpu::OpsApiFn()->TpuGlobalInitialize();
+  tensorflow::tpu::OpsApiFn()->TpuGlobalInitializeFn();
 }
 
 
