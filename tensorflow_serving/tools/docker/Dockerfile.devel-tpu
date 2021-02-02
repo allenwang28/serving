@@ -91,8 +91,7 @@ RUN mkdir /bazel && \
     rm -f /bazel/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
 
 # Download TF branch with TPU VM changes.
-WORKDIR /tensorflow
-RUN git clone -b tpuvm https://github.com/allenwang28/tensorflow.git && mv tensorflow/* . && rm -rf tensorflow
+RUN git clone -b tpuvm https://github.com/allenwang28/tensorflow.git
 
 # Download TF Serving with TPU VM changes.
 WORKDIR /tensorflow-serving
