@@ -97,7 +97,7 @@ FROM base_build as binary_build
 #ARG TF_SERVING_BUILD_OPTIONS="--config=release"
 ARG TF_SERVING_BUILD_OPTIONS=""
 RUN echo "Building with build options: ${TF_SERVING_BUILD_OPTIONS}"
-ARG TF_SERVING_BAZEL_OPTIONS="--define=this_should_break=1 --distinct_host_configuration=false --define=framework_shared_object=false --define=with_tpu_support=true"
+ARG TF_SERVING_BAZEL_OPTIONS="--distinct_host_configuration=false --define=framework_shared_object=false --define=with_tpu_support=true"
 RUN echo "Building with Bazel options: ${TF_SERVING_BAZEL_OPTIONS}"
 
 RUN bazel build --color=yes --curses=yes \
@@ -124,7 +124,7 @@ RUN pip3 install --upgrade /tmp/pip/tf_nightly-2.5.0-cp36-cp36m-linux_x86_64.whl
 #     pip --no-cache-dir install --upgrade \
 #     /tmp/pip/tensorflow_serving_api-*.whl && \
 #     rm -rf /tmp/pip
-RUN pip3 install tensorflow-serving-api
+RUN pip3 install tensorflow-serving-api --no-dependencies
 
 COPY libtpu.so /lib/libtpu.so
 COPY simple_example.py /tensorflow-serving/simple_example.py
