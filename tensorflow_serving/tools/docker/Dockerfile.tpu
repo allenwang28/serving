@@ -90,9 +90,6 @@ RUN mkdir /bazel && \
     cd / && \
     rm -f /bazel/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
 
-# Download TF branch with TPU VM changes.
-RUN git clone -b tpuvm2 https://github.com/allenwang28/tensorflow.git
-
 # Download TF Serving with TPU VM changes.
 WORKDIR /tensorflow-serving
 RUN git clone -b tpuvm https://github.com/allenwang28/serving.git && mv serving/* . && mv serving/.bazelrc . && rm -rf serving
@@ -107,7 +104,6 @@ RUN echo "Building with Bazel options: ${TF_SERVING_BAZEL_OPTIONS}"
 RUN bazel build --color=yes --curses=yes \
     ${TF_SERVING_BAZEL_OPTIONS} \
     --verbose_failures \
-    --override_repository=org_tensorflow=/tensorflow \
     --output_filter=DONT_MATCH_ANYTHING \
     ${TF_SERVING_BUILD_OPTIONS} \
     tensorflow_serving/model_servers:tensorflow_model_server && \
@@ -153,6 +149,4 @@ tensorflow_model_server --port=8500 --rest_api_port=8501 \
 "$@"' > /usr/bin/tf_serving_entrypoint.sh \
 && chmod +x /usr/bin/tf_serving_entrypoint.sh
 
-
-
-CMD ["/bin/bash"]
+ENTRYPOINT ["/usr/bin/tf_serving_entrypoint.sh"]
