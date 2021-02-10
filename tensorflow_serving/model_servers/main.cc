@@ -62,7 +62,7 @@ void InitializeTPU() {
   if (library) {
     tensorflow::tpu::InitializeTpuLibrary(library);
   }
-  tensorflow::tpu::OpsApiFn()->TpuGlobalInitializeFn();
+  tensorflow::tpu::OpsApiFn()->TfTpu_InitializeTpuModelServer();
 }
 
 
