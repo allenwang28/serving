@@ -90,8 +90,11 @@ RUN mkdir /bazel && \
     cd / && \
     rm -f /bazel/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
 
-# Download TF Serving with TPU VM changes.
+# Download TF branch with TPU VM changes.
+RUN git clone -b tpuvm https://github.com/allenwang28/tensorflow.git
+
 WORKDIR /tensorflow-serving
+# Download TF Serving with TPU VM changes.
 RUN git clone -b tpuvm https://github.com/allenwang28/serving.git && mv serving/* . && mv serving/.bazelrc . && rm -rf serving
 
 FROM base_build as binary_build
@@ -104,6 +107,7 @@ RUN echo "Building with Bazel options: ${TF_SERVING_BAZEL_OPTIONS}"
 RUN bazel build --color=yes --curses=yes \
     ${TF_SERVING_BAZEL_OPTIONS} \
     --verbose_failures \
+    --override_repository=org_tensorflow=/tensorflow \
     --output_filter=DONT_MATCH_ANYTHING \
     ${TF_SERVING_BUILD_OPTIONS} \
     tensorflow_serving/model_servers:tensorflow_model_server && \
