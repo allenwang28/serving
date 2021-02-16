@@ -46,24 +46,12 @@ limitations under the License.
 #include <iostream>
 #include <vector>
 
-#include <dlfcn.h>
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow/core/platform/init_main.h"
-#include "tensorflow/core/tpu/tpu_api_dlsym_initializer.h"
-#include "tensorflow/core/tpu/tpu_api.h"
 #include "tensorflow/core/util/command_line_flags.h"
 #include "tensorflow/c/c_api.h"
 #include "tensorflow_serving/model_servers/server.h"
 #include "tensorflow_serving/model_servers/version.h"
-
-
-void InitializeTPU() {
-  void* library = dlopen("libtpu.so", RTLD_NOW);
-  if (library) {
-    tensorflow::tpu::InitializeTpuLibrary(library);
-  }
-  tensorflow::tpu::OpsApiFn()->TfTpu_InitializeTpuModelServerFn();
-}
 
 
 int main(int argc, char** argv) {
@@ -252,8 +240,6 @@ int main(int argc, char** argv) {
   if (argc != 1) {
     std::cout << "unknown argument: " << argv[1] << "\n" << usage;
   }
-
-  InitializeTPU();
 
   tensorflow::serving::main::Server server;
   const auto& status = server.BuildAndStart(options);

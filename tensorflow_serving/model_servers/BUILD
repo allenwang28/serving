@@ -363,6 +363,13 @@ cc_library(
     ] + SUPPORTED_TENSORFLOW_OPS,
 )
 
+TPU_DEPS = select({
+    "@org_tensorflow//tensorflow:with_tpu_support": [
+        "@org_tensorflow//tensorflow/core/tpu:tpu_model_server_initializer",
+    ],
+    "//conditions:default": [],
+})
+
 cc_library(
     name = "tensorflow_model_server_main_lib",
     srcs = [
@@ -383,7 +390,7 @@ cc_library(
         "@org_tensorflow//tensorflow/core/platform/cloud:gcs_file_system",
         "@org_tensorflow//tensorflow/core/platform/hadoop:hadoop_file_system",
         "@org_tensorflow//tensorflow/core/platform/s3:s3_file_system",
-    ],
+    ] + TPU_DEPS,
 )
 
 cc_binary(
