@@ -79,7 +79,7 @@ RUN pip3 --no-cache-dir install \
     --ignore-installed six>=1.12.0
 
 # Download TF branch with TPU VM changes.
-RUN git clone -b tpuvm3 https://github.com/allenwang28/tensorflow.git
+RUN git clone -b tpu_vm_2_19 https://github.com/allenwang28/tensorflow.git
 
 # Set up Bazel
 ENV BAZEL_VERSION 3.7.2
