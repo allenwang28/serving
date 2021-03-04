@@ -128,6 +128,7 @@ RUN bazel build --color=yes --curses=yes \
      rm -rf /tmp/pip
 
 COPY libtpu.so /lib/libtpu.so
+ENV TPU_MIN_LOG_LEVEL 0
 
 FROM binary_build as clean_build
 # Clean up Bazel cache when done.
